@@ -8,12 +8,12 @@ This guide explains how to use envveil to scan, encrypt, decrypt, rotate, and ma
 
 Scan a single file (default: .env):
 ```sh
-python -m envveil.cli scan --env .env
+envveil scan --env .env
 ```
 
 Scan multiple files using patterns:
 ```sh
-python -m envveil.cli scanall --pattern "*.py" --pattern "config/*.json"
+envveil scanall --pattern "*.py" --pattern "config/*.json"
 ```
 
 ---
@@ -22,7 +22,7 @@ python -m envveil.cli scanall --pattern "*.py" --pattern "config/*.json"
 
 ### With Key File (default)
 ```sh
-python -m envveil.cli encrypt --env .env
+envveil encrypt --env .env
 ```
 - Generates a key file (.envveil.key) if not present.
 - Encrypts secrets and stores them in .env.encrypted.
@@ -30,7 +30,7 @@ python -m envveil.cli encrypt --env .env
 
 ### With Passphrase
 ```sh
-python -m envveil.cli encrypt --env .env --passphrase "your_passphrase"
+envveil encrypt --env .env --passphrase "your_passphrase"
 ```
 - No key file is created or needed.
 - You must remember your passphrase to decrypt.
@@ -41,12 +41,12 @@ python -m envveil.cli encrypt --env .env --passphrase "your_passphrase"
 
 With passphrase:
 ```sh
-python -m envveil.cli decrypt --passphrase "your_passphrase"
+envveil decrypt --passphrase "your_passphrase"
 ```
 
 With key file:
 ```sh
-python -m envveil.cli decrypt --key path/to/keyfile
+envveil decrypt --key path/to/keyfile
 ```
 
 If neither is provided, you will be prompted.
@@ -57,12 +57,12 @@ If neither is provided, you will be prompted.
 
 Change the passphrase:
 ```sh
-python -m envveil.cli rotate-key --old-passphrase "old" --new-passphrase "new"
+envveil rotate-key --old-passphrase "old" --new-passphrase "new"
 ```
 
 Change the key file:
 ```sh
-python -m envveil.cli rotate-key --old-key oldkeyfile.key --new-key newkeyfile.key
+envveil rotate-key --old-key oldkeyfile.key --new-key newkeyfile.key
 ```
 
 ---
@@ -71,7 +71,7 @@ python -m envveil.cli rotate-key --old-key oldkeyfile.key --new-key newkeyfile.k
 
 Encrypt secrets in a repo that is already public:
 ```sh
-python -m envveil.cli retrofit --env .env
+envveil retrofit --env .env
 ```
 - Scans for secrets, encrypts them, and ensures .gitignore is set up.
 
@@ -81,8 +81,8 @@ python -m envveil.cli retrofit --env .env
 
 Fetch and update .gitignore for your language:
 ```sh
-python -m envveil.cli gitignore python
-python -m envveil.cli gitignore node
+envveil gitignore python
+envveil gitignore node
 ```
 - Fetches the latest template from GitHub's official gitignore repo.
 - Ensures secret files are ignored.
@@ -117,8 +117,6 @@ Before starting your app in production or CI/CD, decrypt secrets and write them 
 ```sh
 # Example in a deployment script or CI/CD pipeline
 envveil decrypt --passphrase "$DEPLOY_SECRET" > .env
-# or
-python -m envveil.cli decrypt --passphrase "$DEPLOY_SECRET" > .env
 ```
 - Your app then loads secrets from `.env` as usual.
 - Never commit the decrypted `.env` file to your repository.
@@ -154,17 +152,23 @@ docker run -e ENVVEIL_PASSPHRASE=yourpassphrase myappimage
 
 ```sh
 # Scan for secrets
-python -m envveil.cli scanall --pattern "*.env" --pattern "settings.py"
+envveil scanall --pattern "*.env" --pattern "settings.py"
 
 # Encrypt secrets with a passphrase
-python -m envveil.cli encrypt --env .env --passphrase "mysecretpass"
+envveil encrypt --env .env --passphrase "mysecretpass"
 
 # Decrypt secrets
-python -m envveil.cli decrypt --passphrase "mysecretpass"
+envveil decrypt --passphrase "mysecretpass"
 
 # Rotate to a new passphrase
-python -m envveil.cli rotate-key --old-passphrase "mysecretpass" --new-passphrase "newpass"
+envveil rotate-key --old-passphrase "mysecretpass" --new-passphrase "newpass"
 
 # Check audit log
-cat envveil_audit.log
-``` 
+type envveil_audit.log
+```
+
+---
+
+> **Note:**
+> If the `envveil` command is not found, you can always use:
+> `python -m envveil.cli ...` 
