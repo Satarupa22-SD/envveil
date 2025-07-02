@@ -1,6 +1,6 @@
 # Envveil
 
-** Envveil ** is a Python library and CLI tool for scanning, encrypting, and managing sensitive secrets (like API keys, tokens, and passwords) in your project. It helps you keep secrets out of your codebase, supports both key file and passphrase-based encryption, and provides audit logging and .gitignore management for maximum security.
+**Envveil** is a Python library and CLI tool for scanning, encrypting, and managing sensitive secrets (like API keys, tokens, and passwords) in your project. It helps you keep secrets out of your codebase, supports both key file and passphrase-based encryption, and provides audit logging and .gitignore management for maximum security.
 
 ---
 
