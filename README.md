@@ -7,8 +7,6 @@
 ## Author
 
 - **Satarupa Deb**  
-  Email: satarupa2212@gmail.com
-
 ---
 
 ## Features
@@ -31,7 +29,6 @@
 ```sh
 pip install envveil
 ```
-
 ---
 
 ## Usage Summary Table
