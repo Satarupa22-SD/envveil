@@ -18,7 +18,19 @@ envveil scanall --pattern "*.py" --pattern "config/*.json"
 
 ---
 
-## 2. Encrypt Secrets
+## 2. Add .env to .gitignore Without Encrypting (storeenv)
+
+If you just want to make sure your `.env` file (or any secret file) is not committed to git, but don't want to encrypt it, use:
+
+```sh
+envveil storeenv --env .env
+```
+- This will add `.env` to your `.gitignore` if it's not already there.
+- You can specify a different file with `--env <filename>`.
+
+---
+
+## 3. Encrypt Secrets
 
 ### With Key File (default)
 ```sh
@@ -37,7 +49,7 @@ envveil encrypt --env .env --passphrase "your_passphrase"
 
 ---
 
-## 3. Decrypt Secrets
+## 4. Decrypt Secrets
 
 With passphrase:
 ```sh
@@ -53,7 +65,7 @@ If neither is provided, you will be prompted.
 
 ---
 
-## 4. Rotate Key or Passphrase
+## 5. Rotate Key or Passphrase
 
 Change the passphrase:
 ```sh
@@ -67,7 +79,7 @@ envveil rotate-key --old-key oldkeyfile.key --new-key newkeyfile.key
 
 ---
 
-## 5. Retrofit for Existing Repos
+## 6. Retrofit for Existing Repos
 
 Encrypt secrets in a repo that is already public:
 ```sh
@@ -77,7 +89,7 @@ envveil retrofit --env .env
 
 ---
 
-## 6. Fetch Language-Specific .gitignore
+## 7. Fetch Language-Specific .gitignore
 
 Fetch and update .gitignore for your language:
 ```sh
@@ -96,13 +108,13 @@ envveil gitignore python --replace
 
 ---
 
-## 7. Audit Logging
+## 8. Audit Logging
 
 - All decryption and key rotation events are logged in `envveil_audit.log` with timestamp, user, action, and file.
 
 ---
 
-## 8. Security Notes
+## 9. Security Notes
 
 - **Passphrase mode:** No key file is stored. The passphrase is never saved; if you forget it, secrets are unrecoverable.
 - **Key file mode:** Always ensure `.envveil.key` is in your `.gitignore`. envveil will warn you if not.
@@ -110,7 +122,7 @@ envveil gitignore python --replace
 
 ---
 
-## 9. Automating Decryption in Deployment (CI/CD, Servers)
+## 10. Automating Decryption in Deployment (CI/CD, Servers)
 
 Before starting your app in production or CI/CD, decrypt secrets and write them to a .env file:
 
@@ -123,7 +135,7 @@ envveil decrypt --passphrase "$DEPLOY_SECRET" > .env
 
 ---
 
-## 10. Using envveil with Docker or Cloud Platforms
+## 11. Using envveil with Docker or Cloud Platforms
 
 **Docker:**
 - Add a step in your Dockerfile or entrypoint script to decrypt before starting the app:
@@ -148,7 +160,7 @@ docker run -e ENVVEIL_PASSPHRASE=yourpassphrase myappimage
 
 ---
 
-## 11. Example Workflow
+## 12. Example Workflow
 
 ```sh
 # Scan for secrets
