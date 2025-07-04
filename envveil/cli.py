@@ -1,5 +1,5 @@
 import argparse
-from .scanner import scan_env_file
+from .scanner import scan_env_file, scan_project_repository
 from .encryptor import encrypt_secrets, ensure_gitignore_entries, decrypt_secrets, rotate_key
 from .patterns import find_files_by_patterns
 import os
@@ -38,6 +38,12 @@ def main():
 
     scanall_parser = subparsers.add_parser("scanall", help="Scan multiple files for sensitive keys.")
     scanall_parser.add_argument("--pattern", action="append", help="Glob pattern for files to scan (can be used multiple times)")
+
+    scanrepo_parser = subparsers.add_parser("scanrepo", help="Scan the entire project directory for sensitive keys.")
+    scanrepo_parser.add_argument("--dir", default=".", help="Directory to scan (default: current directory)")
+
+    storeenv_parser = subparsers.add_parser("storeenv", help="Add the .env file to .gitignore without encrypting it.")
+    storeenv_parser.add_argument("--env", default=".env", help="Path to .env file (default: .env)")
 
     args = parser.parse_args()
 
@@ -132,6 +138,33 @@ def main():
             print(f"\nScanning {file}:")
             result = scan_env_file(file)
             print(result)
+    elif args.command == "scanrepo":
+        results = scan_project_repository(args.dir)
+        if not results:
+            print("No sensitive keys found in the repository.")
+        else:
+            print("Sensitive keys found in the following files:")
+            for file, secrets in results.items():
+                print(f"\nFile: {file}")
+                for key, info in secrets.items():
+                    value = info['value']
+                    value_display = value[:20] + ('...' if len(value) > 20 else '') if value else ''
+                    print(f"  {key}: {value_display} (line {info['line']})")
+    elif args.command == "storeenv":
+        env_file = args.env
+        gitignore_path = ".gitignore"
+        if os.path.exists(gitignore_path):
+            with open(gitignore_path, "r", encoding="utf-8") as f:
+                lines = [line.strip() for line in f.readlines()]
+        else:
+            lines = []
+        if env_file not in lines:
+            lines.append(env_file)
+            with open(gitignore_path, "w", encoding="utf-8") as f:
+                f.write("\n".join(lines) + "\n")
+            print(f"Added {env_file} to .gitignore.")
+        else:
+            print(f"{env_file} is already in .gitignore.")
 
 def fetch_gitignore_template(language):
     lang_map = {
