@@ -18,6 +18,28 @@ envveil scanall --pattern "*.py" --pattern "config/*.json"
 
 ---
 
+## 1a. Scan the Entire Repository (scanrepo)
+
+Scan all supported files in your entire project directory (recursively):
+```sh
+envveil scanrepo --dir .
+```
+
+Scan a specific subfolder (e.g., demo):
+```sh
+envveil scanrepo --dir demo
+```
+
+Scan an absolute path:
+```sh
+envveil scanrepo --dir /path/to/your/project/demo
+```
+
+- This will recursively scan all supported file types, including `.env`, `.py`, `.js`, `.jsx`, `.ts`, `.tsx`, `.json`, `.yaml`, `.yml`, `.toml`, `.ini`, `.cfg`, `.conf`, and more.
+- Any secrets matching your `secret_patterns.txt` will be reported, regardless of where they are stored.
+
+---
+
 ## 2. Add .env to .gitignore Without Encrypting (storeenv)
 
 If you just want to make sure your `.env` file (or any secret file) is not committed to git, but don't want to encrypt it, use:
